@@ -1,0 +1,18 @@
+spring:
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        password: password
+        url: jdbc:mysql://localhost:3306/airbusinventory
+        username: root
+    jpa:
+        hibernate:
+            ddl-auto: update
+        #show-sql: true
+            
+            
+logging:
+    level:
+      root: WARN
+      org:
+        hibernate:
+          SQL: DEBUG
