@@ -30,7 +30,7 @@ public class ProductDTO {
 	@NotBlank
 	private String productCatagory;
 	
-	@Size(min = 10, max = 200, message = "Product Description must be between 10 and 500 characters")
+	@Size(min = 10, max = 500, message = "Product Description must be between 10 and 500 characters")
 	private String productDescription;
 	
 	@PositiveOrZero
