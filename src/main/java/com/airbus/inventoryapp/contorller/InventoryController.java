@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(value = "/inventory")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080"})
+@CrossOrigin
 @Api(value = "Inventory", description = "Operations pertaining to products available in Inventory")
 public class InventoryController {
 
@@ -55,7 +55,7 @@ public class InventoryController {
 	 * @return ResponseEntity<List<ProductDTO>>
 	 * @exception
 	 */
-	@ApiOperation(value = "View a list of available products", response = ProductDTO.class)
+	@ApiOperation(value = "View a table of available products", response = ProductDTO.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved list"),
 			@ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
