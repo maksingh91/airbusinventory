@@ -24,15 +24,15 @@ public class ProductDTO {
 	@PositiveOrZero
 	private int productId;
 	
-	@NotBlank
+	@NotBlank(message = "Product Name must not be blank")
 	private String productName;
 	
-	@NotBlank
+	@NotBlank(message = "Product Catagory must not be blank")
 	private String productCatagory;
 	
 	@Size(min = 10, max = 500, message = "Product Description must be between 10 and 500 characters")
 	private String productDescription;
 	
-	@PositiveOrZero
+	@PositiveOrZero(message = "Unit must be Positive or Zero")
 	private int unit;
 }

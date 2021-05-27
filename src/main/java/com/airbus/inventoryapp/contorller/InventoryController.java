@@ -1,11 +1,9 @@
 package com.airbus.inventoryapp.contorller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,16 +34,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/inventory")
 @CrossOrigin
+@RequestMapping(value = "/inventory")
 @Api(value = "Inventory", description = "Operations pertaining to products available in Inventory")
 public class InventoryController {
 
 	@Autowired
 	ProductsService productService;
-	
-	ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-	Validator validator = factory.getValidator();
 
 	//Logger logger = LoggerFactory.getLogger(InventoryController.class);
 	
@@ -55,14 +50,15 @@ public class InventoryController {
 	 * @return ResponseEntity<List<ProductDTO>>
 	 * @exception
 	 */
-	@ApiOperation(value = "View a table of available products", response = ProductDTO.class)
+	@ApiOperation(value = "View a list of available products", response = ProductDTO.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved list"),
 			@ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@GetMapping(value = "/getallproducts")
-	public ResponseEntity<List<ProductDTO>> getAllProducts() {
+	public ResponseEntity<List<ProductDTO>> getAllProducts(/* @AuthenticationPrincipal Principal userInfo */) {
 		log.info("inside InventoryController getAllProducts()");
+		//log.info("UserInfo"+userInfo);
 		return new ResponseEntity<List<ProductDTO>>(productService.getAllProducts(), HttpStatus.OK);
 	}
 
@@ -70,9 +66,10 @@ public class InventoryController {
 	 * @author Mahaveer Singh Ratnoo
 	 * @param id
 	 * @return ResponseEntity<ProductDTO>
+	 * @throws Exception 
 	 * @exception
 	 */
-	@ApiOperation(value = "Fetch a product with product ID", response = ProductDTO.class)
+	/*@ApiOperation(value = "Fetch a product with product ID", response = ProductDTO.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
 			@ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
@@ -81,6 +78,30 @@ public class InventoryController {
 	public ResponseEntity<ProductDTO> showProduct(@RequestParam Integer id) {
 		log.info("inside InventoryController showProduct() Product ID : "+ id);
 		return new ResponseEntity<ProductDTO>(productService.showProduct(id), HttpStatus.OK); 
+	}*/
+	
+	
+	/*
+	 * @GetMapping(value = "/getfluxproduct") private Flux<ProductDTO>
+	 * getAllEmployees() { return
+	 * Flux.fromIterable(productService.getAllProducts()); }
+	 */
+	
+	/**
+	 * @author Mahaveer Singh Ratnoo
+	 * @param id
+	 * @return ResponseEntity<List<ProductDTO>>
+	 * @exception
+	 */
+	@ApiOperation(value = "Fetch all products with Category", response = ProductDTO.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
+			@ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
+	@GetMapping(value = "/searchproductsbycategory")
+	public ResponseEntity<List<ProductDTO>> searchProductByCategory(@RequestParam String category/*, @AuthenticationPrincipal Principal userInfo*/) {
+		log.info("inside InventoryController searchProductByCategory() Category : "+ category);
+		return new ResponseEntity<List<ProductDTO>>(productService.searchProduct(category), HttpStatus.OK); 
 	}
 
 	/**
@@ -96,10 +117,13 @@ public class InventoryController {
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@ResponseStatus(code=HttpStatus.CREATED)
 	@PostMapping(value = "/addproduct")
-	public ResponseEntity<String> saveProduct(@Valid @RequestBody ProductDTO product) {
+	public ResponseEntity<List<String>> saveProduct(
+			@Valid @RequestBody ProductDTO product/* , @AuthenticationPrincipal Principal userInfo */) {
 		log.info("inside InventoryController saveProduct() Product is :"+ product.toString());
 		productService.saveProduct(product);
-		return new ResponseEntity<String>("Product saved successfully", HttpStatus.OK);
+		List<String> msg = new ArrayList<String>();
+		msg.add("Product saved successfully");
+		return new ResponseEntity<List<String>>(msg, HttpStatus.OK);
 	}
 
 	/**
@@ -114,9 +138,12 @@ public class InventoryController {
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@PutMapping(value = "/updateproduct")
-	public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO product) {
+	public ResponseEntity<List<String>> updateProduct(
+			@Valid @RequestBody ProductDTO product/* , @AuthenticationPrincipal Principal userInfo */) {
 		log.info("inside InventoryController updateProduct() Product is :"+ product.toString());
 		productService.saveProduct(product);
-		return new ResponseEntity<String>("Product updated successfully", HttpStatus.OK);
+		List<String> msg = new ArrayList<String>();
+		msg.add("Product updated successfully");
+		return new ResponseEntity<List<String>>(msg, HttpStatus.OK);
 	}
 }

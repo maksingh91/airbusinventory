@@ -1,4 +1,11 @@
 spring:
+    security:
+        oauth2:
+            client:
+              registration:                github:
+                  client-id: 2479bfa7d8244889fe13
+                  client-secret: a79d9f57378bb1e1890801bf9cdc593d6d3b9b64
+                  redirect-uri: http://localhost:4200/callback
     datasource:
         password: password
         url: jdbc:mysql://localhost:3306/airbusinventory
@@ -7,14 +14,13 @@ spring:
         hibernate:
             ddl-auto: update
         #show-sql: true
-            
-            
+                     
 logging:
     level:
-      root: WARN
       org:
         hibernate:
           SQL: DEBUG
 
 server:
   port: 8085
+  

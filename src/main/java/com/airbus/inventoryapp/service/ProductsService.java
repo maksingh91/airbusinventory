@@ -14,7 +14,6 @@ import com.airbus.inventoryapp.exception.NoDataFoundException;
 import com.airbus.inventoryapp.exception.ProductNotFoundException;
 import com.airbus.inventoryapp.model.ProductDTO;
 import com.airbus.inventoryapp.repository.ProductRepository;
-import com.sun.tools.sjavac.Log;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,7 +64,6 @@ public class ProductsService {
 	 * @exception
 	 */
 	public ProductDTO showProduct(int id) {
-		log.error("ProductsService: getAllProducts(): No product found with Product ID: "+id);
 		Products product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
 		return modelMapper.map(product, ProductDTO.class);
 	}
@@ -79,6 +77,25 @@ public class ProductsService {
 	public void saveProduct(ProductDTO product) {
 		productRepository.save(modelMapper.map(product, Products.class));
 
+	}
+
+	/**
+	 * @author Mahaveer Singh Ratnoo
+	 * @param category
+	 * @return List<ProductDTO>
+	 * @exception
+	 */
+	public List<ProductDTO> searchProduct(String category) {
+		Type listType = new TypeToken<List<ProductDTO>>() {}.getType();
+		List<Products> productLst = (List<Products>) productRepository.findByProductCatagoryEquals(category);
+		if (productLst.isEmpty()) 
+		{
+			log.error("ProductsService: getAllProducts(): No products found unnder this Category");
+			throw new NoDataFoundException("No data found Under this Category");
+	    }
+
+		List<ProductDTO> productDtoLst = modelMapper.map(productLst, listType);
+		return productDtoLst;
 	}
 
 }
